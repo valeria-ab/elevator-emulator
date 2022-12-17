@@ -1,7 +1,15 @@
 <template>
   <div class="elevator-emulator">
-    <LiftShaft :floors="config.floors"/>
-    <LobbyFloors :floors="config.floors"/>
+    <div class="elevator-emulator__container">
+      <LiftShaft :floors="config.floors"
+                 :elevatorCallQueue="elevatorCallQueue"
+                 @delete-floor="deleteFloorFromElevatorCallQueue"
+      />
+      <LobbyFloors :floors="config.floors"
+                   @set-floor="addNewCallToElevatorCallQueue"
+                   :elevator-call-queue="elevatorCallQueue"
+      />
+    </div>
   </div>
 </template>
 
@@ -11,14 +19,23 @@ import LobbyFloors from '@/components/LobbyFloors.vue';
 
 export default {
   name: 'App',
-  components: { LiftShaft, LobbyFloors },
+  components: {LiftShaft, LobbyFloors},
   data() {
     return {
       config: {
         floors: 5,
         shafts: 1,
       },
+      elevatorCallQueue: [1],
     };
+  },
+  methods: {
+    addNewCallToElevatorCallQueue(floor) {
+      this.elevatorCallQueue = [...this.elevatorCallQueue, floor];
+    },
+    deleteFloorFromElevatorCallQueue() {
+      this.elevatorCallQueue = this.elevatorCallQueue.filter((_, index) => index !== 0);
+    },
   },
 };
 </script>
@@ -44,10 +61,15 @@ li {
   width: 100%;
   height: 100vh;
   padding: 8px 15px;
-  background: linear-gradient(#c1c1c1 0.5%, #ffffff 0.5%);
-  background-size: 100% 20%;
-  border-bottom: 1px #c1c1c1 solid;
-  display: flex;
+
+  &__container {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(#c1c1c1 0.5%, #ffffff 0.5%);
+    background-size: 100% 20%;
+    border-bottom: 1px #c1c1c1 solid;
+    display: flex;
+  }
 }
 
 </style>

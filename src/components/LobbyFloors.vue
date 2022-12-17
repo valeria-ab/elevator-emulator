@@ -7,9 +7,10 @@
     >
       <div>{{floor + 1}}</div>
       <button
-          :class="['lobby-floors__floor-button', {'active': lastPickedFloor === floor + 1}]"
+          :class="['lobby-floors__floor-button',
+          {'active': elevatorCallQueue.slice(1).includes(floor + 1)}]"
           type="button"
-          @click="setLastPickedFloor(floor + 1)"
+          @click="onFloorButtonClick(floor + 1)"
       />
     </li>
   </ul>
@@ -21,16 +22,18 @@ export default {
   name: 'lobby-floors',
   props: {
     floors: Number,
+    elevatorCallQueue: Array,
   },
   data() {
     return {
       floorButtons: [],
-      lastPickedFloor: null,
     };
   },
   methods: {
-    setLastPickedFloor(floor) {
-      this.lastPickedFloor = floor;
+    onFloorButtonClick(floor) {
+      if (this.elevatorCallQueue[this.elevatorCallQueue.length - 1] !== floor) {
+        this.$emit('set-floor', floor);
+      }
     },
   },
   created() {

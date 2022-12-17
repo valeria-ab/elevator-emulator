@@ -1,6 +1,11 @@
 <template>
   <div class="lift-shaft">
-    <Elevator :current-floor="1" :on-the-way-to="5" :floors="floors"/>
+    <Elevator :current-floor="elevatorCallQueue[0]"
+              :on-the-way-to="elevatorCallQueue[1]"
+              :floors="floors"
+              :elevator-call-queue="elevatorCallQueue"
+              @delete-floor="this.deleteFloor"
+    />
   </div>
 </template>
 
@@ -12,6 +17,12 @@ export default {
   components: { Elevator },
   props: {
     floors: Number,
+    elevatorCallQueue: Array,
+  },
+  methods: {
+    deleteFloor() {
+      this.$emit('delete-floor');
+    },
   },
 };
 </script>
